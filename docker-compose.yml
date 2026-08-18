@@ -1,0 +1,17 @@
+version: '3.8' # ระบุเวอร์ชันของ Docker Compose
+
+services:
+  # Container ที่ 1: ตัว Web Dashboard ที่เราสร้าง Image เอง
+  kiosk-web:
+    build:
+      context: . # สั่งให้ build จาก Dockerfile ในโฟลเดอร์ปัจจุบัน
+    ports:
+      - "5000:5000" # แมปพอร์ต 5000 ของเครื่องหลักเข้ากับพอร์ต 5000 ของ Container
+    depends_on:
+      - kiosk-db # ระบุว่า Container นี้จะรันได้ ก็ต่อเมื่อ kiosk-db รันเสร็จแล้ว
+
+  # Container ที่ 2: ตัวฐานข้อมูล (Redis) สำหรับนับจำนวนการยืมคืน
+  kiosk-db:
+    image: redis:alpine # ดึง Image สำเร็จรูปมาจาก Docker Hub
+    ports:
+      - "6379:6379" # แมปพอร์ตมาตรฐานของ Redis
